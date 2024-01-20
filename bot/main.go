@@ -1,9 +1,13 @@
 package main
 
 import (
-	"fmt"
+	logger "bot/common/logger"
+	"bot/config"
 )
 
 func main(){
-	fmt.Println("Hello world")
+	appConf := config.GetConfig()
+	log := logger.NewLogger()
+	log.SetLogLevel(appConf.LOG_LEVEL)
+	
 }

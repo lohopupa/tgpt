@@ -2,7 +2,7 @@ package config
 
 import (
 	logger "bot/common/logger"
-	tg "bot/services/tg"
+	types "bot/types"
 	"os"
 	"strconv"
 	"strings"
@@ -14,7 +14,7 @@ type Config struct {
 	TG_API_KEY string
 	TG_WH_URL  string
 	TG_WH_PORT int
-	TG_TYPE    tg.BotType
+	TG_TYPE    types.BotType
 }
 
 func GetConfig() Config {
@@ -23,7 +23,7 @@ func GetConfig() Config {
 		TG_API_KEY: getEnvStr("TG_API_KEY", ""),
 		TG_WH_URL:  getEnvStr("TG_WH_URL", "http://localhost"),
 		TG_WH_PORT: getEnvInt("TG_WH_PORT", 8080),
-		TG_TYPE:    getEnvBotType("TG_BOT_TYPE", tg.BotTypeLogPoll),
+		TG_TYPE:    getEnvBotType("TG_BOT_TYPE", types.BotTypeLogPoll),
 	}
 }
 
@@ -63,13 +63,13 @@ func getEnvLoggingLevel(name string, defaultValue logger.LOG_LEVEL) logger.LOG_L
 	}
 	return defaultValue
 }
-func getEnvBotType(name string, defaultValue tg.BotType) tg.BotType {
+func getEnvBotType(name string, defaultValue types.BotType) types.BotType {
 	if v := os.Getenv(name); v != "" {
 		switch v {
 		case "WH":
-			return tg.BotTypeWebHook
+			return types.BotTypeLogPoll
 		case "LP":
-			return tg.BotTypeLogPoll
+			return types.BotTypeWebHook
 		}
 	}
 	return defaultValue

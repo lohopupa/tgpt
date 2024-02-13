@@ -7,7 +7,9 @@ import (
 
 func main(){
 	appConf := config.GetConfig()
-	log := logger.NewLogger()
-	log.SetLogLevel(appConf.LOG_LEVEL)
+	logger.SetLogLevel(appConf.LOG_LEVEL)
+	// for {
+		logger.Info("Bot Started")
+	// }
 	
 }

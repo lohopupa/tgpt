@@ -1,7 +1,6 @@
 package common
 
 import (
-	"fmt"
 	"log"
 )
 
@@ -13,6 +12,8 @@ const (
 	INFO
 	DEBUG
 )
+
+var logLevel LOG_LEVEL
 
 func (ll LOG_LEVEL) repr() string {
 	switch ll {
@@ -29,42 +30,32 @@ func (ll LOG_LEVEL) repr() string {
 	}
 }
 
-type Logger struct {
-	logLevel LOG_LEVEL
+func SetLogLevel(ll LOG_LEVEL) {
+	logLevel = ll
 }
 
-func NewLogger() Logger {
-	return Logger{
-		logLevel: INFO,
+func customLog(ll LOG_LEVEL, msg any) {
+	if ll <= logLevel {
+		log.Printf("[%s]: %s\n", ll.repr(), msg)
 	}
 }
 
-func (l *Logger) SetLogLevel(logLevel LOG_LEVEL) {
-	l.logLevel = logLevel
+func Info(msg any) {
+	customLog(INFO, msg)
 }
 
-func (l *Logger) log(logLevel LOG_LEVEL, prms ...any) {
-	if l.logLevel <= logLevel {
-		log.Println(fmt.Sprintf("[%s]: ", logLevel.repr()), prms)
-	}
+func Warn(msg any) {
+	customLog(WARNING, msg)
 }
 
-func (l *Logger) Info(prms ...any) {
-	l.log(INFO, prms...)
+func Err(msg any) {
+	customLog(ERROR, msg)
 }
 
-func (l *Logger) Warn(prms ...any) {
-	l.log(WARNING, prms...)
+func Panic(msg any) {
+	log.Panic(msg)
 }
 
-func (l *Logger) Err(prms ...any) {
-	l.log(ERROR, prms...)
-}
-
-func (l *Logger) Panic(prms ...any) {
-	log.Panic(prms...)
-}
-
-func (l *Logger) Fatal(prms ...any) {
-	log.Fatal(prms...)
+func Fatal(msg any) {
+	log.Fatal(msg)
 }

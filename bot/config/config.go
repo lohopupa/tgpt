@@ -11,19 +11,23 @@ import (
 type Config struct {
 	LOG_LEVEL logger.LOG_LEVEL
 
-	TG_API_KEY string
-	TG_WH_URL  string
-	TG_WH_PORT int
-	TG_TYPE    types.BotType
+	TG_API_KEY           string
+	TG_BOT_TYPE          types.BotType
+
+	TG_LP_UPDATE_TIMEOUT int
+	
+	TG_WH_URL            string
+	TG_WH_CERT_FOLDER    string
 }
 
 func GetConfig() Config {
 	return Config{
-		LOG_LEVEL:  getEnvLoggingLevel("LOG_LEVEL", logger.ERROR),
-		TG_API_KEY: getEnvStr("TG_API_KEY", ""),
-		TG_WH_URL:  getEnvStr("TG_WH_URL", "http://localhost"),
-		TG_WH_PORT: getEnvInt("TG_WH_PORT", 8080),
-		TG_TYPE:    getEnvBotType("TG_BOT_TYPE", types.BotTypeLogPoll),
+		LOG_LEVEL:            getEnvLoggingLevel("LOG_LEVEL", logger.ERROR),
+		TG_API_KEY:           getEnvStr("TG_API_KEY", ""),
+		TG_BOT_TYPE:          getEnvBotType("TG_BOT_TYPE", types.BotTypeLogPoll),
+		TG_LP_UPDATE_TIMEOUT: getEnvInt("TG_LP_UPDATE_TIMEOUT", 60),
+		TG_WH_URL:            getEnvStr("TG_WH_URL", "http://localhost:8080"),
+		TG_WH_CERT_FOLDER:    getEnvStr("TG_WH_CERT_FOLDER", "."),
 	}
 }
 

@@ -34,28 +34,41 @@ func SetLogLevel(ll LOG_LEVEL) {
 	logLevel = ll
 }
 
-func customLog(ll LOG_LEVEL, msg any) {
+func customLog(ll LOG_LEVEL, fmtString string, prms... any) {
 	if ll <= logLevel {
-		log.Printf("[%s]: %s\n", ll.repr(), msg)
+		log.Printf("[%s]: ", ll.repr())
+		log.Printf(fmtString, prms...)
 	}
 }
 
 func Info(msg any) {
-	customLog(INFO, msg)
+	Infof("%s\n", msg)
 }
 
 func Warn(msg any) {
-	customLog(WARNING, msg)
+	Warnf("%s\n", msg)
 }
 
 func Err(msg any) {
-	customLog(ERROR, msg)
+	Errf("%s\n", msg)
 }
 
-func Panic(msg any) {
-	log.Panic(msg)
+func Infof(fmtString string, prms... any) {
+	customLog(INFO, fmtString, prms...)
 }
 
-func Fatal(msg any) {
-	log.Fatal(msg)
+func Warnf(fmtString string, prms... any) {
+	customLog(WARNING, fmtString, prms...)
+}
+
+func Errf(fmtString string, prms... any) {
+	customLog(ERROR, fmtString, prms...)
+}
+
+func Panic(prms... any) {
+	log.Panic(prms...)
+}
+
+func Fatal(prms... any) {
+	log.Fatal(prms...)
 }

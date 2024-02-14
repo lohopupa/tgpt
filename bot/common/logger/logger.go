@@ -1,6 +1,7 @@
-package common
+package logger
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -34,41 +35,28 @@ func SetLogLevel(ll LOG_LEVEL) {
 	logLevel = ll
 }
 
-func customLog(ll LOG_LEVEL, fmtString string, prms... any) {
+func customLog(ll LOG_LEVEL, fmtString string, prms ...any) {
 	if ll <= logLevel {
-		log.Printf("[%s]: ", ll.repr())
-		log.Printf(fmtString, prms...)
+		log.Printf("[%s]: %s\n", ll.repr(), fmt.Sprintf(fmtString, prms...))
 	}
 }
 
-func Info(msg any) {
-	Infof("%s\n", msg)
-}
-
-func Warn(msg any) {
-	Warnf("%s\n", msg)
-}
-
-func Err(msg any) {
-	Errf("%s\n", msg)
-}
-
-func Infof(fmtString string, prms... any) {
+func Info(fmtString string, prms ...any) {
 	customLog(INFO, fmtString, prms...)
 }
 
-func Warnf(fmtString string, prms... any) {
+func Warn(fmtString string, prms ...any) {
 	customLog(WARNING, fmtString, prms...)
 }
 
-func Errf(fmtString string, prms... any) {
+func Err(fmtString string, prms ...any) {
 	customLog(ERROR, fmtString, prms...)
 }
 
-func Panic(prms... any) {
+func Panic(prms ...any) {
 	log.Panic(prms...)
 }
 
-func Fatal(prms... any) {
+func Fatal(prms ...any) {
 	log.Fatal(prms...)
 }

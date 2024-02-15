@@ -1,19 +1,24 @@
 package tg
 
 import (
-	"bot/types"
 	"bot/config"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"bot/types"
+	"errors"
+	"fmt"
 )
 
-
-type Bot struct {
-	bot *tgbotapi.BotAPI
-	botType types.BotType
+type BaseHandler interface {
+	Start() error
+	Stop() error
 }
 
-type BaseHandler interface {
-	Init(config config.Config) (Bot, error)
-	Start() (error)
-	Stop()
+func CreateBot(config config.TgConfig) (BaseHandler, error) {
+	switch config.BotType {
+	case types.BotTypeLogPoll:
+		return CreateLP(config)
+	case types.BotTypeWebHook:
+		return CreateWH(config)
+	default:
+		return nil, errors.New(fmt.Sprintf("Could not recognize bot type %d", config.BotType))
+	}
 }

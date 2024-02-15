@@ -8,26 +8,37 @@ import (
 	"strings"
 )
 
+type TgConfig struct {
+	ApiKey                string
+	BotType               types.BotType
+	LongPollUpdateTimeout int
+	WebHookUrl            string
+	WebHookLocalPort      int
+	WebHookCertFolder     string
+}
+
+type AppConfig struct {
+	LogLevel logger.LOG_LEVEL
+}
+
 type Config struct {
-	LOG_LEVEL logger.LOG_LEVEL
-
-	TG_API_KEY           string
-	TG_BOT_TYPE          types.BotType
-
-	TG_LP_UPDATE_TIMEOUT int
-	
-	TG_WH_URL            string
-	TG_WH_CERT_FOLDER    string
+	AppConfig AppConfig
+	TgConfig  TgConfig
 }
 
 func GetConfig() Config {
 	return Config{
-		LOG_LEVEL:            getEnvLoggingLevel("LOG_LEVEL", logger.ERROR),
-		TG_API_KEY:           getEnvStr("TG_API_KEY", ""),
-		TG_BOT_TYPE:          getEnvBotType("TG_BOT_TYPE", types.BotTypeLogPoll),
-		TG_LP_UPDATE_TIMEOUT: getEnvInt("TG_LP_UPDATE_TIMEOUT", 60),
-		TG_WH_URL:            getEnvStr("TG_WH_URL", "http://localhost:8080"),
-		TG_WH_CERT_FOLDER:    getEnvStr("TG_WH_CERT_FOLDER", "."),
+		AppConfig: AppConfig{
+			LogLevel: getEnvLoggingLevel("LOG_LEVEL", logger.ERROR),
+		},
+		TgConfig: TgConfig{
+			ApiKey:                getEnvStr("TG_API_KEY", ""),
+			BotType:               getEnvBotType("TG_BOT_TYPE", types.BotTypeLogPoll),
+			LongPollUpdateTimeout: getEnvInt("TG_LP_UPDATE_TIMEOUT", 60),
+			WebHookUrl:            getEnvStr("TG_WH_URL", "http://localhost:8080"),
+			WebHookLocalPort:      getEnvInt("TG_WH_LOCAL_PORT", 8443),
+			WebHookCertFolder:     getEnvStr("TG_WH_CERT_FOLDER", "."),
+		},
 	}
 }
 
@@ -71,9 +82,9 @@ func getEnvBotType(name string, defaultValue types.BotType) types.BotType {
 	if v := os.Getenv(name); v != "" {
 		switch v {
 		case "WH":
-			return types.BotTypeLogPoll
-		case "LP":
 			return types.BotTypeWebHook
+		case "LP":
+			return types.BotTypeLogPoll
 		}
 	}
 	return defaultValue

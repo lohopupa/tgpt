@@ -12,7 +12,7 @@ type TgConfig struct {
 	ApiKey                string
 	BotType               types.BotType
 	LongPollUpdateTimeout int
-	WebHookUrl            string
+	WebHookAddr            string
 	WebHookLocalPort      int
 	WebHookCertFolder     string
 }
@@ -35,7 +35,7 @@ func GetConfig() Config {
 			ApiKey:                getEnvStr("TG_API_KEY", ""),
 			BotType:               getEnvBotType("TG_BOT_TYPE", types.BotTypeLogPoll),
 			LongPollUpdateTimeout: getEnvInt("TG_LP_UPDATE_TIMEOUT", 60),
-			WebHookUrl:            getEnvStr("TG_WH_URL", "http://localhost:8080"),
+			WebHookAddr:            getEnvStr("TG_WH_ADDR", "localhost"),
 			WebHookLocalPort:      getEnvInt("TG_WH_LOCAL_PORT", 8443),
 			WebHookCertFolder:     getEnvStr("TG_WH_CERT_FOLDER", "."),
 		},

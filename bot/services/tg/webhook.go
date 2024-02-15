@@ -28,8 +28,8 @@ func CreateWH(config config.TgConfig) (*WebHookBot, error) {
 
 	logger.Info("Authorized on account %s", bot.Self.UserName)
 
-	sertFile := config.WebHookCertFolder + "cert.pem"
-	keyFile := config.WebHookCertFolder + "key.pem"
+	sertFile := config.WebHookCertFolder + "/" + "cert.pem"
+	keyFile := config.WebHookCertFolder + "/" + "key.pem"
 
 	go http.ListenAndServeTLS("localhost:8443", sertFile, keyFile, nil)
 	time.Sleep(500 * time.Millisecond)

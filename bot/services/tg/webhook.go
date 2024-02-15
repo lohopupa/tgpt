@@ -28,14 +28,17 @@ func CreateWH(config config.TgConfig) (*WebHookBot, error) {
 
 	logger.Info("Authorized on account %s", bot.Self.UserName)
 
-	go http.ListenAndServeTLS("localhost:8443", "cert.pem", "key.pem", nil)
+	sertFile := config.WebHookCertFolder + "cert.pem"
+	keyFile := config.WebHookCertFolder + "key.pem"
+
+	go http.ListenAndServeTLS("localhost:8443", sertFile, keyFile, nil)
 	time.Sleep(500 * time.Millisecond)
 
 	certFile := requestFileData{
-		FileName: "cert.pem",
+		FileName: sertFile,
 	}
 
-	wh, err := tgbotapi.NewWebhookWithCert("https://tg-webhook.lhpa.ru/"+bot.Token, certFile)
+	wh, err := tgbotapi.NewWebhookWithCert("http://tg-webhook.lhpa.ru/"+bot.Token, certFile)
 	if err != nil {
 		return nil, err
 	}

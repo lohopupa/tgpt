@@ -3,10 +3,9 @@ FROM golang:latest
 WORKDIR /app
 
 ARG TG_WH_CERT_FOLDER
+ENV TG_WH_CERT_FOLDER_E=$TG_WH_CERT_FOLDER
 
 COPY . .
-
-COPY ${TG_WH_CERT_FOLDER}/* ./
 
 RUN go mod download
 

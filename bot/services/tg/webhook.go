@@ -1,6 +1,7 @@
 package tg
 
 import (
+	"bot/commands"
 	"bot/config"
 	"errors"
 
@@ -16,7 +17,7 @@ func CreateWH(config config.TgConfig) (*WebHookBot, error) {
 	return nil, errors.New("WebHook API is not supported yet")
 }
 
-func (bot WebHookBot) Start() error {
+func (bot WebHookBot) Start(commands commands.Commands) error {
 	return errors.New("WebHook API is not supported yet")
 }
 

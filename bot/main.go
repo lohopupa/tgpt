@@ -1,7 +1,8 @@
 package main
 
 import (
-	logger "bot/common/logger"
+	"bot/commands"
+	"bot/common/logger"
 	"bot/config"
 	"bot/services/tg"
 )
@@ -13,5 +14,8 @@ func main(){
 	if err != nil {
 		logger.Fatal(err)
 	}
-	bot.Start()
+	cmds := commands.Commands{
+		CmdHandlers: commands.CreateEchoBotCommands(),
+	}
+	bot.Start(cmds)
 }

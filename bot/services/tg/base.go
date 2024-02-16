@@ -1,6 +1,7 @@
 package tg
 
 import (
+	"bot/commands"
 	"bot/config"
 	"bot/types"
 	"errors"
@@ -8,7 +9,7 @@ import (
 )
 
 type BaseHandler interface {
-	Start() error
+	Start(commands commands.Commands) error
 	Stop() error
 }
 

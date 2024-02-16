@@ -1,14 +1,16 @@
 package tg
 
 import (
-	logger "bot/common/logger"
+	"bot/commands"
+	"bot/common/logger"
 	"bot/config"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type LongPollBot struct {
 	instance       *tgbotapi.BotAPI
-	update_timeout int
+	updateTimeout int
 }
 
 func CreateLP(config config.TgConfig) (*LongPollBot, error) {
@@ -25,28 +27,20 @@ func CreateLP(config config.TgConfig) (*LongPollBot, error) {
 
 	x := LongPollBot{
 		instance:       bot,
-		update_timeout: config.LongPollUpdateTimeout,
+		updateTimeout: config.LongPollUpdateTimeout,
 	}
 	logger.Info("LongPoll bot created!")
 	return &x, nil
 }
 
-func (bot LongPollBot) Start() error {
+func (bot LongPollBot) Start(commands commands.Commands) error {
 	logger.Info("LongPoll bot started!")
 	u := tgbotapi.NewUpdate(0)
-	u.Timeout = bot.update_timeout
+	u.Timeout = bot.updateTimeout
 	updates := bot.instance.GetUpdatesChan(u)
+	commands.Start(bot.instance, updates)
 
-	for update := range updates {
-		if update.Message != nil {
-			logger.Info("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-			msg.ReplyToMessageID = update.Message.MessageID
-
-			bot.instance.Send(msg)
-		}
-	}
+	
 
 	return nil
 }

@@ -1,10 +1,11 @@
 package main
 
 import (
-	"bot/commands"
+	commands "bot/commands"
 	"bot/common/logger"
 	"bot/config"
 	"bot/services/tg"
+	openai "bot/services/openai"
 )
 
 func main(){
@@ -14,8 +15,14 @@ func main(){
 	if err != nil {
 		logger.Fatal(err)
 	}
+
+	openaiClient, err := openai.CreateClient(config.OpenAIConfig)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	cmds := commands.Commands{
-		CmdHandlers: commands.CreateEchoBotCommands(),
+		CmdHandlers: commands.CreateChatGPTCommands(openaiClient),
 	}
 	bot.Start(cmds)
 }

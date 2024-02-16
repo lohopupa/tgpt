@@ -21,9 +21,15 @@ type AppConfig struct {
 	LogLevel logger.LOG_LEVEL
 }
 
+type OpenAIConfig struct {
+	Token string
+	BaseURL string 
+}
+
 type Config struct {
 	AppConfig AppConfig
 	TgConfig  TgConfig
+	OpenAIConfig OpenAIConfig
 }
 
 func GetConfig() Config {
@@ -38,6 +44,10 @@ func GetConfig() Config {
 			WebHookAddr:            getEnvStr("TG_WH_ADDR", "localhost"),
 			WebHookLocalPort:      getEnvInt("TG_WH_LOCAL_PORT", 8443),
 			WebHookCertFolder:     getEnvStr("TG_WH_CERT_FOLDER", "."),
+		},
+		OpenAIConfig: OpenAIConfig{
+			BaseURL: getEnvStr("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+			Token: getEnvStr("OPENAI_TOKEN", "token"),
 		},
 	}
 }

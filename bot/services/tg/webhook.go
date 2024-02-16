@@ -1,14 +1,8 @@
 package tg
 
 import (
-	logger "bot/common/logger"
 	"bot/config"
-	"net/http"
 	"errors"
-	"time"
-	"bufio"
-	"io"
-	"os"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -19,80 +13,16 @@ type WebHookBot struct {
 }
 
 func CreateWH(config config.TgConfig) (*WebHookBot, error) {
-	bot, err := tgbotapi.NewBotAPI(config.ApiKey)
-	if err != nil {
-		return nil, err
-	}
-
-	// bot.Debug = true
-
-	logger.Info("Authorized on account %s", bot.Self.UserName)
-
-	go http.ListenAndServeTLS("localhost:8443", "./ssl/cert.pem", "./ssl/key.pem", nil)
-	time.Sleep(500 * time.Millisecond)
-
-	certFile := requestFileData{
-		FileName: "./ssl/cert.pem",
-	}
-
-	wh, err := tgbotapi.NewWebhookWithCert("http://tg-webhook.lhpa.ru/"+bot.Token, certFile)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = bot.Request(wh)
-	if err != nil {
-		return nil, err
-	}
-
-	info, err := bot.GetWebhookInfo()
-	if err != nil {
-		return nil, err
-	}
-
-	if info.LastErrorDate != 0 {
-		logger.Info("Telegram callback failed: %s", info.LastErrorMessage)
-	}
-
-	return nil, nil
+	return nil, errors.New("WebHook API is not supported yet")
 }
 
 func (bot WebHookBot) Start() error {
-
-	updates := bot.instance.ListenForWebhook("/" + bot.config.ApiKey)
-
-	for update := range updates {
-		if update.Message != nil {
-			logger.Info("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-			msg.ReplyToMessageID = update.Message.MessageID
-
-			bot.instance.Send(msg)
-		}
-	}
-	return nil
+	return errors.New("WebHook API is not supported yet")
 }
-
 
 
 func (bot WebHookBot) Stop() error {
-	return errors.New("Could not stop webhook service")
+	return errors.New("WebHook API is not supported yet")
 }
 
-type requestFileData struct {
-	FileName string
-}
 
-func (t requestFileData) NeedsUpload() bool {
-	return true
-}
-
-func (t requestFileData) UploadData() (name string, ioOut io.Reader, err error) {
-	file, err := os.Open(t.FileName)
-	return t.FileName, bufio.NewReader(file), err
-}
-
-func (t requestFileData) SendData() string {
-	return "ok"
-}

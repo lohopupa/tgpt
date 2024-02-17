@@ -23,6 +23,7 @@ func main(){
 
 	cmds := commands.Commands{
 		CmdHandlers: commands.CreateChatGPTCommands(openaiClient),
+		// CmdHandlers: commands.CreateEchoBotCommands(),
 	}
 	bot.Start(cmds)
 }

@@ -17,12 +17,19 @@ func (this Commands) Start(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel
 			logger.Info("[%s]: %s", update.Message.From.UserName, update.Message.Text)
 			for _, cmd := range this.CmdHandlers {
 				if matched, _ := regexp.MatchString(cmd.RegExp, update.Message.Text); matched {
-					newMsg, err := cmd.Handler(&update)
+					newMsgs, err := cmd.Handler(&update)
 					if err != nil {
 						logger.Err(err.Error())
-						newMsg = errorMsg(&update)
+						bot.Send(errorMsg(&update))
 					}
-					bot.Send(newMsg)
+					for idx, msg := range newMsgs {
+						logger.Info("Send %d messge", idx)
+						_, err := bot.Send(msg)
+						if err != nil {
+							logger.Err(err.Error())
+							bot.Send(errorMsg(&update))
+						}
+					}
 					break
 				}
 			}
@@ -33,7 +40,7 @@ func (this Commands) Start(bot *tgbotapi.BotAPI, updates tgbotapi.UpdatesChannel
 
 type CommandHandler struct {
 	RegExp  string
-	Handler func(update *tgbotapi.Update) (tgbotapi.Chattable, error)
+	Handler func(update *tgbotapi.Update) ([]tgbotapi.Chattable, error)
 }
 
 func errorMsg(update *tgbotapi.Update) tgbotapi.Chattable {
